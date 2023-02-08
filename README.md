@@ -5,6 +5,8 @@ web-based systems at Heilbronn University in winter term 2020/2021.
 
 https://myworktracker.wirecoders.com/
 
+![https://myworktracker.wirecoders.com/](https://github.com/xhypeDE/MyWorkTracker/blob/main/myWorkTracker_thumbnail.png)
+
 ## Project structure
 
 The project folder contains the following files and directories by default:
@@ -90,6 +92,8 @@ Entwicklung einer Flask-Anwendung mit Datenbankanbindung im Rahmen der Veranstal
 webbasierte Systeme an der Hochschule Heilbronn im Wintersemester 2020/2021.
 
 https://myworktracker.wirecoders.com/
+
+![https://myworktracker.wirecoders.com/](https://github.com/xhypeDE/MyWorkTracker/blob/main/myWorkTracker_thumbnail.png)
 
 ## Projektstruktur
 
