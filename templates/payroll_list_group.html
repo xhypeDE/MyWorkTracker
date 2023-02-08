@@ -1,0 +1,58 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Lohnabrechnungen - myWorkTracker{% endblock %}
+{% block content %}
+
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Lohnabrechnungen</h5>
+            <p>Hier können Sie Ihre Lohnabrechnungen anschauen und herunterladen</p>
+            {% if message %}
+            <div id="hideMe" class="w3-panel w3-red">
+                <h3>Es ist ein Fehler aufgetreten!</h3>
+                <p>{{ message }}</p>
+            </div>
+            {% endif %}
+                <select id="user_dropdown" name="user_list" class="form-control custom-select" id="browsers">
+                    {% for i in range(user_count) %}
+                    <option class="form-option" {% if selected_user == fetched_users[i][0] %}{{ 'selected' }}{% endif %} name="user_list_option" value="{{ fetched_users[i][0] }}">{{ fetched_users[i][1] }} {{ fetched_users[i][2] }}</option>
+                    {% endfor %}
+                </select>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Monat</th>
+                    <th scope="col">Anzeigen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in range(12) %}
+                <form novalidate method="post" action="{{ url_for('payroll_generate') }}">
+                    <tr>
+                        <th scope="row">{{ month_option[i][0] }}</th>
+                        <input type="hidden" name="query" value="{{ month_option[i] }}">
+                        <input id="selectedUserId" type="hidden" name="selected_user" value="">
+                        <input id="selectedUserName" type="hidden" name="selected_user_name" value="">
+                        <input type="hidden" name="origin" value="group">
+                        <td><button type="submit" name="action" value="show" class="button button-two">Anzeigen</button></td>
+                    </tr>
+                </form>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function show(){
+        var dropdown = document.getElementById("user_dropdown");
+        var userName = dropdown.options[dropdown.selectedIndex].text;
+        var userId = dropdown.value;
+        document.getElementById("selectedUserName").value = userName;
+        document.getElementById("selectedUserId").value = userId;
+    }
+    window.onload = show;
+    onchange=show;
+</script>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "homepage_layout.html" %}
+{% block title %}Logout - myWorkTracker{% endblock %}
+
+{% block header %}
+<li class="navbar-button"><a href="{{ url_for('login') }}" class="button button-two">Login</a></li>
+<li class="navbar-button"><a href="{{ url_for('register') }}" class="button button-two">Registrieren</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="welcome-content">
+    <div class="w3-half-row">
+        <h1 style="text-align: center">Sie wurden erfolgreich ausgeloggt.</h1>
+        <p style="text-align: center">Weiterleitung in 3 Sekunden...</p>
+    </div>
+</div>
+<script>
+    setTimeout(function(){
+        window.location.href = '{{ url_for('index') }}';
+    }, 3000);
+</script>
+{% endblock %}

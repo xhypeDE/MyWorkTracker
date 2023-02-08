@@ -1,0 +1,96 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Zeiteinträge - myWorkTracker{% endblock %}
+{% block content %}
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h1 style="font-size: 24px;"class="card-title">Verwalte Zeiteintrag mit ID: {{ id }}</h1>
+            <div class="card">
+            <div class="card-body">
+            <h2 class="card-title">Original Daten</h2>
+            <p style="font-size: 13px;">Startzeit: {{ start_string }}</p>
+            <p style="font-size: 13px;">Stopzeit: {{ stop_string }}</p>
+            <p style="font-size: 13px;">Pause: {{ pause }}</p>
+            <p style="font-size: 13px;">Arbeitszeit: {{ arbeitszeit }}</p>
+            <p style="font-size: 13px;">Arbeitszeit ohne Pause: {{ netto_arbeitszeit }}</p>
+            </div>
+            </div>
+            <div class="col">
+            {% if error_messages %}
+            <div class="w3-panel w3-red">
+                <h3>Fehler! Daten nicht gespeichert</h3>
+                {% for error in error_messages %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if success_message %}
+            <div class="w3-panel w3-green">
+                <h3>Erfolgreich gespeichert!</h3>
+                <p>{{ success_message }}</p>
+            </div>
+            {% endif %}
+            <form novalidate method="post" action="{{ url_for('time_entry_edit') }}">
+                <script>
+                    window.onload = changeAnyDateTime
+                    function changeAnyDateTime(){
+                        var today = new Date().toISOString().split(".")[0];
+                        document.getElementById("start_time").setAttribute("max", today);
+                        document.getElementById("stop_time").setAttribute("max", today);
+                        let dateInputStartValue = document.getElementById("start_time").value;
+                        let dateInputStopValue = document.getElementById("stop_time").value;
+                        let dateObjectStart = new Date(dateInputStartValue)
+                        let dateObjectStop = new Date(dateInputStopValue)
+                        let dateInputStart = document.getElementById("stop_time");
+                        let dateInputStop = document.getElementById("stop_time");
+                        if (dateInputStopValue < dateInputStartValue){
+                            dateInputStop.min = new Date(dateInputStartValue).toISOString().split(".")[0];
+                            dateInputStop.value = dateInputStartValue
+                        }
+                        let pauseRaw = document.getElementById("pause").value
+                        let diff = ((dateObjectStop.getTime() - dateObjectStart.getTime()) / 1000 / 60) - pauseRaw
+                        if (diff < 0){
+                            let calc = "Die Arbeitszeit ist ungültig. Bitte prüfen Sie die Pausenlänge"
+                            document.getElementById("calculated_time").innerHTML = calc;
+                            }
+                        else{
+                            let hours = (diff / 60);
+                            let rhours = Math.floor(hours);
+                            let minutes = (hours - rhours) * 60;
+                            let rminutes = Math.round(minutes);
+                            let precalc = "Die Arbeitszeit abzüglich Pause liegt bei: "
+                            let calc = precalc + rhours + " Stunde(n) und " + rminutes + " Minuten(n)."
+                            document.getElementById("calculated_time").innerHTML = calc;
+                           }
+                    }
+                    function isNumberKey(evt){
+                        let charCode = (evt.which) ? evt.which : evt.keyCode
+                        if (charCode > 31 && (charCode < 48 || charCode > 57))
+                            return false;
+                        return true;
+                    }
+                </script>
+            <label for="start_time">Startzeit: </label>
+            <input class="form-control" type="datetime-local" id="start_time" name="start_time" onblur="changeAnyDateTime();" min="2005-01-01T20:20" value="{{ start }}">
+            <br>
+            <label for="stop_time">Stopzeit: </label>
+            <input class="form-control" type="datetime-local" id="stop_time" name="stop_time" onblur="changeAnyDateTime();" value="{{ stop }}">
+            <br>
+            <label for="pause_duration">Dauer Pause (in Minuten): </label>
+            <input onkeypress="return isNumberKey(event);" class="form-control" type="number" id="pause" name="pause" onblur="changeAnyDateTime();" value="{{ pause_raw }}">
+            <br>
+            <p id="calculated_time">Arbeitszeit: </p>
+            <input type="hidden" name="db_id" value="{{ db_id }}">
+            <input type="hidden" name="u_id" value="{{ u_id }}">
+            <input type="hidden" name="o_id" value="{{ o_id }}">
+            <input type="hidden" name="origin" value="{{ origin }}">
+            <button type="submit" name="action" value="save_input" class="button button-entry-save">Zeiteintrag speichern</button>
+            <button type="submit" name="action" value="delete_entry" class="button button-entry-delete">Zeiteintrag löschen</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}

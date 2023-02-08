@@ -1,0 +1,64 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Zeiteinträge - myWorkTracker{% endblock %}
+{% block content %}
+
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Zeitverwaltung</h5>
+            <p>Hier können Sie Ihre erfassten Arbeitszeiten verwalten</p>
+            {% if message %}
+            <div class="w3-panel w3-green">
+                <h3>Vorgang erfolgreich!</h3>
+                <p>{{ message }}</p>
+            </div>
+            {% endif %}
+            <form novalidate method="post" action="{{ url_for('time_list') }}">
+                <select name="month" class="form-control custom-select" id="browsers">
+                    {% for i in range(12) %}
+                    <option class="form-option" {% if selected_month == month_option[i][0] %}{{ 'selected' }}{% endif %} name="month_option_value" value="{{ month_option[i] }}">{{ month_option[i][0] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="button button-two">Einträge laden</button>
+            </form>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Zeit ID</th>
+                    <th scope="col">Start</th>
+                    <th scope="col">Stop</th>
+                    <th scope="col">Pause</th>
+                    <th scope="col">Arbeitszeit</th>
+                    <th scope="col">Arbeitszeit abzgl. Pause</th>
+                    <th scope="col">Bearbeiten</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in range(entry_count) %}
+                <tr>
+                    <th scope="row">{{ output_entries[i][1] }}</th>
+                    <td>{{ output_entries[i][2] }}</td>
+                    <td>{{ output_entries[i][3] }}</td>
+                    <td>{{ output_entries[i][4] }}</td>
+                    <td>{{ output_entries[i][5] }}</td>
+                    <td>{{ output_entries[i][6] }}</td>
+                    <form novalidate method="post" action="{{ url_for('time_edit') }}">
+                    <input type="hidden" name="id" value="{{ output_entries[i][1] }}">
+                    <input type="hidden" name="db_id" value="{{ output_entries[i][0] }}">
+                    <input type="hidden" name="start" value="{{ output_entries[i][2] }}">
+                    <input type="hidden" name="stop" value="{{ output_entries[i][3] }}">
+                    <input type="hidden" name="pause" value="{{ output_entries[i][4] }}">
+                    <input type="hidden" name="pause_raw" value="{{ output_entries[i][7] }}">
+                    <input type="hidden" name="arbeitszeit" value="{{ output_entries[i][5] }}">
+                    <input type="hidden" name="netto_arbeitszeit" value="{{ output_entries[i][6] }}">
+                    <td><button type="submit" value="{{ output_entries[i][0] }}" class="button button-two">Bearbeiten</button></td>
+                    </form>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

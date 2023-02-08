@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="myWorkTracker - Control Interface">
+        <meta name="keywords" content="arbeitszeit, arbeit, produktiv, zeit, management">
+        <meta name="author" content="Gruppe 6, webSys">
+        <!-- Der Meta Tag Viewport limitiert den Inhalt der Seite auf die Bildschirmbreite des Nutzers -->
+		<!-- Die restlichen Meta Tags beschreiben den Inhalt der Seite den Autor und Keywords -->
+
+        <!-- Titel der Seite -->
+        <title>{% block title %}{% endblock %}</title>
+
+        <!-- Externe Google Schriftart und Icons-->
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+
+        <!-- CSS Datei -->
+		<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='w3.css') }}" rel="stylesheet">
+
+    </head>
+
+    <body>
+        <div class="body-wrap">
+            <div class="welcome-container">
+               <div class="welcome-header">
+					<ul>
+                        <a href="{{ url_for('index') }}"><img class="welcome-logo" src="{{ url_for('static', filename='myTrack_company_logo_light.png') }}" alt="myWorkTracker Logo"></a>
+                        {% block header %}{% endblock %}
+					</ul>
+			    </div>
+                {% block content %}{% endblock %}
+                </div>
+			</div>
+	</body>
+</html>

@@ -1,0 +1,89 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<br>
+<div class="w3-row">
+<h1 id="welcomeMessage" style="padding-left:20px;"></h1>
+</div>
+{% if message %}
+            <div id="hideMe" class="w3-panel w3-blue-gray">
+                <h3>Meldung!</h3>
+                <p>{{ message }}</p>
+            </div>
+{% endif %}
+{% if admin_level == 2%}
+<div class="w3-row">
+    <div class="card card-transparent stats-card w3-col l4 m12 s12">
+        <div class="card-body">
+            <div class="stats-info">
+                <h5 class="card-title-stats">{{ cost_prediction }} &#8364;</h5>
+                <p class="stats-text">Personalkosten Schätzwert dieser Monat</p>
+            </div>
+            <div class="stats-icon money-icon">
+                <i class="material-icons">euro</i>
+            </div>
+        </div>
+    </div>
+    <div class="card card-transparent stats-card w3-col l4 m12 s12">
+        <div class="card-body">
+            <div class="stats-info">
+                <h5 class="card-title-stats">{{ realtime_cost }} &#8364;</h5>
+                <p class="stats-text">Personalkosten Realwert in diesem Monat</p>
+            </div>
+            <div class="stats-icon actual-icon">
+                <i class="material-icons">euro</i>
+            </div>
+        </div>
+    </div>
+    <div class="card card-transparent stats-card w3-col l4 m12 s12">
+        <div class="card-body">
+            <div class="stats-info">
+                <h5 class="card-title-stats">{{ realtime_hours }} Stunden</h5>
+                <p class="stats-text">Getrackte Stunden insgesamt diesen Monat</p>
+            </div>
+            <div class="stats-icon clock-icon">
+                <i class="material-icons">more_time</i>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% if admin_level >= 2 %}
+    <br>
+<div class="w3-row-padding">
+<div class="w3-col l6">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title-big">Nutzer insgesamt</h5>
+            <h1 class="user_count">{{ all_users_count }}</h1>
+        </div>
+    </div>
+</div>
+<div class="w3-col l6">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title-big">Nutzer online</h5>
+            <h1 class="user_count_online">{{ active_users_count }}</h1>
+        </div>
+    </div>
+</div>
+</div>
+{% endif %}
+<script>
+function time() {
+    var today = new Date();
+    var seconds = ('0'+today.getSeconds()).slice(-2);
+    var minutes = ('0'+today.getMinutes()).slice(-2);
+    var hours = ('0'+today.getHours()).slice(-2);
+    var time = hours + ":" + minutes + ":" + seconds;
+    var timeOfDay = "Tag"
+    if (hours > 17 || hours < 4){
+        timeOfDay = "Abend"
+    }
+    var statement = "Guten " + timeOfDay + "! Es ist " + time;
+    document.getElementById("welcomeMessage").innerText = statement
+}
+setInterval(time, 1000);
+window.onload(time())
+</script>
+{% endblock %}

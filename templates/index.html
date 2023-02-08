@@ -1,0 +1,42 @@
+{% extends "homepage_layout.html" %}
+{% block title %}Startseite - myWorkTracker{% endblock %}
+
+{% block header %}
+{% if access_to_dashboard == False %}
+    {% block buttons_level_0 %}
+    <li class="navbar-button"><a href="{{ url_for("login") }}" class="button button-two">Login</a></li>
+    <li class="navbar-button"><a href="{{ url_for("register") }}" class="button button-two">Registrieren</a></li>
+    {% endblock buttons_level_0 %}
+{% endif %}
+{% if access_to_dashboard == True %}
+    {% block buttons_level_1 %}
+    <li class="navbar-button"><a href="{{ url_for("logout") }}" class="button button-two">Logout</a></li>
+    <li class="navbar-button"><a href="{{ url_for("user_dashboard") }}" class="button button-two">zum Dashboard</a></li>
+    {% endblock buttons_level_1 %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="welcome-content">
+    <div class="w3-row">
+        <div class="w3-half hero-info">
+            <h1 class="hero-info-headline">Digitalisieren Sie die Zeiterfassung Ihres Unternehmens mit dem myWorkTracker</h1>
+            {% if access_to_dashboard == False %}
+            {% block register_button%}
+            <a href="{{ url_for('register') }}"><span class="w3-badge">Jetzt starten</span></a>
+            {% endblock register_button %}
+            {% endif %}
+            <p class="hero-info-text">Mit myWorkTracker können Sie die Arbeitszeit Ihrer Mitarbeiter für Home-Office Jobs ganz einfach tracken. Durch einen Invite-Code können sich Ihre Mitarbeiter registrieren und Ihre Arbeitszeit eintragen. Durch die Anwendung können Sie vollautomatisiert Lohnabrechnungen erstellen, Arbeitszeiten verwalten und Ihre Personalkosten im Blick behalten. </p>
+        </div>
+        <img class="w3-half w3-col.m12 hero-image" src="{{ url_for('static', filename='graphic-time-hero.png') }}" alt="Grafik im Hero-Bereich">
+    </div>
+    <div class="w3-row bg-dark-wrap">
+        <div class="w3-half w3-center copyright-section">
+            <h3>Erstellt von Gruppe 06 - SoftWebSys WiSe 2021/22</h3>
+        </div>
+        <div class="w3-half w3-center">
+            <img class="small-image" src="{{ url_for('static', filename='hhn-logo.png') }}" alt="HHN Logo">
+        </div>
+    </div>
+</div>
+{% endblock %}

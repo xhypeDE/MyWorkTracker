@@ -1,0 +1,35 @@
+Zugangsdaten Dummy Accounts
+
+Masteradmin myWorkTracker
+E-Mail: masteradmin@myworktracker.de
+Passwort: 1Hb37Bj
+Masteradmin
+
+---
+
+Berhard Schmidt
+E-Mail: berhard@schmidt-schmiede.de
+Passwort: i7aNNM7
+Chef
+
+Graf Hesse
+E-Mail: g.hesse@schmidt-schmiede.de
+Passwort: 0oK7kYJ
+Mitarbeiter
+
+Heike Binder
+E-Mail: h.binder@schmidt-schmiede.de
+Passwort: aI9qPZP
+Mitarbeiter
+
+----
+
+Maike Zimmermann
+E-Mail: m.zimmermann@master-online-marketing.de
+Passwort: tDsud8g
+Chef
+
+Niko Bellic
+E-Mail: n.bellic@m-online-marketing.de
+Passwort: NOox08G
+Mitarbeiter

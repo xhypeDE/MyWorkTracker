@@ -1,0 +1,72 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Einstellungen - myWorkTracker{% endblock %}
+{% block content %}
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Account Einstellungen</h5>
+            <div class="col">
+            {% if error_messages %}
+            <div class="w3-panel w3-red">
+                <h3>Fehler! Daten nicht gespeichert</h3>
+                {% for error in error_messages %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if success_message %}
+            <div class="w3-panel w3-green">
+                <h3>Erfolgreich gespeichert!</h3>
+                <p>{{ success_message }}</p>
+            </div>
+            {% endif %}
+            <form novalidate method="post" action="{{ url_for('push_user_edit') }}">
+                <div class="form-group">
+                    <label class="form-label">Vorname</label>
+                    <input type="text" class="form-control {% if 'name' in error_types %}{{ 'error' }}{% endif %}" name="name" placeholder="Vorname" value="{{ name }}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nachname</label>
+                    <input type="text" class="form-control {% if 'surname' in error_types %}{{ 'error' }}{% endif %}" name="surname" placeholder="Nachname" value="{{ surname }}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Telefon</label>
+                    <input type="tel" class="form-control {% if 'phone' in error_types %}{{ 'error' }}{% endif %}" name="phone" placeholder="Telefon" value="{{ phone }}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">E-Mail</label>
+                    <input type="email" class="form-control {% if 'email' in error_types %}{{ 'error' }}{% endif %}" name="email" placeholder="E-Mail" value="{{ email }}">
+                </div>
+                {% if admin_level == 2 %}
+                <div class="form-group">
+                    <label class="form-label">Stundensatz in €</label>
+                    <input type="number" class="form-control {% if 'hourly_rate' in error_types %}{{ 'error' }}{% endif %}" name="hourly_rate" placeholder="Stundensatz" value="{{ hourly_rate }}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Wochenstunden</label>
+                    <input type="number" class="form-control {% if 'workload' in error_types %}{{ 'error' }}{% endif %}" name="workload" placeholder="Wochenstunden" value="{{ workload }}">
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label class="form-label">Passwort</label>
+                    <input type="password" class="form-control {% if 'password' in error_types %}{{ 'error' }}{% endif %}" name="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Passwort wiederholen</label>
+                    <input type="password" class="form-control {% if 'password' in error_types %}{{ 'error' }}{% endif %}" name="password_verify" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
+                </div>
+                <input type="hidden" name="id" value="{{ id }}">
+                <input type="hidden" name="origin" value="self_update">
+                <br>
+                <div class="submit-area">
+                    <input type="submit" name="action" value="Daten speichern" class="button form-edit {% if admin_level == 3 %}{{ 'admin' }}{% endif %}">
+                    <br>
+                    <input type="submit" name="action" value="Konto schließen" class="button form-edit dangerous">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}

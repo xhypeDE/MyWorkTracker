@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="myWorkTracker - Control Interface">
+        <meta name="keywords" content="arbeitszeit, arbeit, produktiv, zeit, management">
+        <meta name="author" content="Gruppe 6, webSys">
+        <!-- Der Meta Tag Viewport limitiert den Inhalt der Seite auf die Bildschirmbreite des Nutzers -->
+		<!-- Die restlichen Meta Tags beschreiben den Inhalt der Seite den Autor und Keywords -->
+
+        <!-- Titel der Seite -->
+        <title>{% block title %}{% endblock %}</title>
+
+        <!-- Externe Google Schriftart und Icons-->
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+
+        <!-- CSS Datei -->
+		<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='w3.css') }}" rel="stylesheet">
+
+    </head>
+
+    <body>
+        <div class="body-wrap">
+            <nav id="sidebar" aria-label="sidebar" class="sidebar">
+				<a href="#sidebar" id="sidebar-toggle" class="sidebar-toggle-button" aria-label="open-sidebar"><i class="material-icons menu-icon">menu</i></a>
+				<a href="#sidebar-close" id="sidebar-close" class="sidebar-close" aria-label="sidebar-close"><i aria-hidden="true" class="material-icons menu-icon">close</i></a>
+                <div class="logo-container">
+					{% if admin_level == 3 %}
+					{% block logo_admin %}
+					<a href="{{ url_for('user_dashboard') }}"><img alt="Logo der Webanwendung" class="logo" src="{{ url_for('static', filename='myTrack_company_logo_admin.png') }}"></a>
+					{% endblock logo_admin %}
+					{% else %}
+					{% block logo_non_admin%}
+					<a href="{{ url_for('user_dashboard') }}"><img alt="Logo der Webanwendung" class="logo" src="{{ url_for('static', filename='myTrack_company_logo.png') }}"></a>
+					{% endblock logo_non_admin %}
+					{% endif %}
+                <div class="sidebar-inner">
+				</div>
+                       {% if admin_level == 3 %}
+                        {% block master_admin_menu %}
+                        <ul class="menu admin">
+                        <li class="sidebar-title">
+                            Meine Bereiche
+                        </li>
+                        <li class="{% if current_page == "dashboard" %}{{ 'active-page' }}{% endif %} admin">
+                            <a href="{{ url_for('user_dashboard') }}"><i class="material-icons-outlined">dashboard</i>Dashboard</a>
+                        </li>
+                        <li class="{% if current_page == "users" %}{{ 'active-page' }}{% endif %} admin">
+                            <a href="{{ url_for('users') }}"><i class="material-icons-outlined">table_rows</i>Nutzer verwalten</a>
+                        </li>
+                        <li class="{% if current_page == "groups" %}{{ 'active-page' }}{% endif %} admin">
+                            <a href="{{ url_for('groups') }}"><i class="material-icons-outlined">groups</i>Gruppen verwalten</a>
+                        </li>
+                        <li class="{% if current_page == "invite_page" %}{{ 'active-page' }}{% endif %} admin">
+                            <a href="{{ url_for('invite_page') }}"><i class="material-icons-outlined">forward_to_inbox</i>Master Einladungen</a>
+                        </li>
+                        <li class="sidebar-title">
+                            Einstellungen
+                        </li>
+                         <li class="{% if current_page == "account" %}{{ 'active-page' }}{% endif %} admin">
+                            <a href="{{ url_for('user_dashboard_account') }}"><i class="material-icons">account_circle</i>Mein Konto</a>
+                        </li>
+                        <li class="sidebar-title">
+                            Sonstiges
+                        </li>
+                        {% if session['is_verified'] == 0 %}
+                            {% block verify_button_master %}
+                                <li class="{% if current_page == "verify" %}{{ 'active-page' }}{% endif %} admin">
+                                    <a style="color: red;" href="{{ url_for('verify_mail') }}"><i class="material-icons">warning</i>E-Mail verifizieren</a>
+                                </li>
+                            {% endblock verify_button_master %}
+                        {% endif %}
+                        <li class="admin">
+                            <a href="{{ url_for('logout') }}"><i class="material-icons">logout</i>Logout</a>
+                        </li>
+                    </ul>
+                        {% endblock master_admin_menu %}
+                        {% endif %}
+                        {% if admin_level == 2 %}
+                        {% block group_admin_menu %}
+                        <ul class="menu">
+                        <li class="sidebar-title">
+                            Meine Bereiche
+                        </li>
+                        <li class="{% if current_page == "dashboard" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('user_dashboard') }}"><i class="material-icons-outlined">dashboard</i>Dashboard</a>
+                        </li>
+                        <li class="{% if current_page == "time_track" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('working_time') }}"><i class="material-icons-outlined">work</i>Arbeitszeit erfassen</a>
+                        </li>
+                        <li class="{% if current_page == "time_list" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('time_list') }}"><i class="material-icons-outlined">engineering</i>Arbeitszeit verwalten</a>
+                        </li>
+                        <li class="sidebar-title">
+                            Mein Unternehmen
+                        </li>
+                        <li class="{% if current_page == "invite_page" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('invite_page') }}"><i class="material-icons-outlined">forward_to_inbox</i>Einladungscodes</a>
+                        </li>
+                        <li class="{% if current_page == "users" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('users') }}"><i class="material-icons-outlined">manage_accounts</i>Mitglieder verwalten</a>
+                        </li>
+                        <li class="{% if current_page == "time_list_group" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('time_list_group') }}"><i class="material-icons-outlined">pending_actions</i>Zeiteinträge</a>
+                        </li>
+                        <li class="{% if current_page == "payroll_list_group" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('payroll_group') }}"><i class="material-icons-outlined">note_alt</i>Lohnabrechnungen</a>
+                        </li>
+                        <li class="sidebar-title">
+                            Einstellungen
+                        </li>
+                         <li class="{% if current_page == "account" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('user_dashboard_account') }}"><i class="material-icons">account_circle</i>Mein Konto</a>
+                        </li>
+                        <li class="sidebar-title">
+                            Sonstiges
+                        </li>
+                        {% if session['is_verified'] == 0 %}
+                            {% block verify_button_admin %}
+                                <li class="{% if current_page == "verify" %}{{ 'active-page' }}{% endif %} admin">
+                                    <a style="color: red;" href="{{ url_for('verify_mail') }}"><i class="material-icons">warning</i>E-Mail verifizieren</a>
+                                </li>
+                            {% endblock verify_button_admin %}
+                        {% endif %}
+                        <li>
+                            <a href="{{ url_for('logout') }}"><i class="material-icons">logout</i>Logout</a>
+                        </li>
+                    </ul>
+                        {% endblock group_admin_menu %}
+                        {% endif %}
+                        {% if admin_level == 1 %}
+                        {% block user_menu %}
+                        <ul class="menu">
+                        <li class="sidebar-title">
+                            Meine Bereiche
+                        </li>
+                        <li class="{% if current_page == "dashboard" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('user_dashboard') }}"><i class="material-icons-outlined">dashboard</i>Dashboard</a>
+                        </li>
+                        <li class="{% if current_page == "time_track" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('working_time') }}"><i class="material-icons-outlined">work</i>Arbeitszeit erfassen</a>
+                        </li>
+                        <li class="{% if current_page == "time_list" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('time_list') }}"><i class="material-icons-outlined">engineering</i>Arbeitszeit verwalten</a>
+                        </li>
+                         <li class="{% if current_page == "payroll" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('payroll') }}"><i class="material-icons-outlined">note_alt</i>Lohnabrechnung</a>
+                        </li>
+                        <li class="sidebar-title">
+                            Einstellungen
+                        </li>
+                         <li class="{% if current_page == "account" %}{{ 'active-page' }}{% endif %}">
+                            <a href="{{ url_for('user_dashboard_account') }}"><i class="material-icons">account_circle</i>Mein Konto</a>
+                        </li>
+                        <li class="sidebar-title">
+                            Sonstiges
+                        </li>
+                        {% if session['is_verified'] == 0 %}
+                            {% block verify_button_user %}
+                                <li class="{% if current_page == "verify" %}{{ 'active-page' }}{% endif %} admin">
+                                    <a style="color: red;" href="{{ url_for('verify_mail') }}"><i class="material-icons">warning</i>E-Mail verifizieren</a>
+                                </li>
+                            {% endblock verify_button_user %}
+                        {% endif %}
+                        <li>
+                            <a href="{{ url_for('logout') }}"><i class="material-icons">logout</i>Logout</a>
+                        </li>
+                    </ul>
+                        {% endblock user_menu %}
+                        {% endif %}
+
+				</div>
+                </nav>
+            <div class="core-container">
+               <div class="core-header {% if admin_level == 3 %}{{ 'admin' }}{% endif %}">
+					<ul>
+  						<li class="header-text">Hallo {{ session['name'] }}</li>
+  						<li class="header-text">{{ session['o_name'] }}</li>
+						<a href="{{ url_for('logout') }}"><li class="button-logout {% if admin_level == 3 %}{{ 'admin' }}{% endif %} eon ">Logout</li></a>
+					</ul>
+			    </div>
+                <div class="core-content">
+                {% block content %}{% endblock %}
+                </div>
+				<!--
+                <div class="page-footer">
+                	<span class="footer-text">2021 © Gruppe 6 webSys - WS21/22</span>
+                </div>
+				-->
+			</div>
+			</div>
+	</body>
+</html>

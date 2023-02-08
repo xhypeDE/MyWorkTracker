@@ -1,0 +1,76 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Benutzerverwaltung - myWorkTracker{% endblock %}
+{% block content %}
+
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            {% if viewing_group %}
+                <h1 style="font-size: 32px;" class="card-title">{{ unternehmensname }}</h1>
+                <p>Verwalte Nutzer des Unternehmens mit der ID: {{ o_id }}</p>
+            {% elif session['admin_level'] == 2 %}
+                <h5 class="card-title">Nutzerverwaltung</h5>
+                <p>Hier können Sie alle Nutzer ihres Unternehmens verwalten</p>
+            {% else %}
+                <h5 class="card-title">Nutzerverwaltung</h5>
+                <p>Hier können Sie alle Nutzer der Webanwendung verwalten</p>
+            {% endif %}
+            {% if message %}
+            <div class="w3-panel w3-green">
+                <h3>Vorgang erfolgreich!</h3>
+                <p>{{ message }}</p>
+            </div>
+            {% endif %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Vorname</th>
+                    <th scope="col">Nachname</th>
+                    <th scope="col">Telefon</th>
+                    <th scope="col">E-Mail</th>
+                    <th scope="col">Admin Level</th>
+                    <th scope="col">Stundensatz in €</th>
+                    <th scope="col">Wochenstunden</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Bearbeiten</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in range(user_count) %}
+                <tr>
+                    <th scope="row">{{ all_users[i][1] }}</th>
+                    <td>{{ all_users[i][2] }}</td>
+                    <td>{{ all_users[i][3] }}</td>
+                    <td>{{ all_users[i][4] }}</td>
+                    <td>{% if all_users[i][6] == 3 %}Masteradmin{% elif  all_users[i][6] == 2 %}Admin{% else %}Mitarbeiter{% endif %}</td>
+                    <td>{{ all_users[i][5] }}</td>
+                    <td>{{ all_users[i][8] }}</td>
+                    {% if all_users[i][9] == "online" %}
+                    <td class="online-text"><nobr>&#183; online</nobr></td>
+                    {% elif all_users[i][9] == "tracking" %}
+                    <td class="tracking-text"><nobr>&#183; arbeitet</nobr></td>
+                    {% elif all_users[i][9] == "pause" %}
+                    <td class="paused-text"><nobr>&#183; in Pause</nobr></td>
+                    {% else %}
+                    <td>{{ all_users[i][9] }}</td>
+                    {% endif %}
+                    <form novalidate method="post" action="{{ url_for('user_edit') }}">
+                    <input type="hidden" name="id" value="{{ all_users[i][0] }}">
+                    <input type="hidden" name="name" value="{{ all_users[i][1] }}">
+                    <input type="hidden" name="surname" value="{{ all_users[i][2] }}">
+                    <input type="hidden" name="phone" value="{{ all_users[i][3] }}">
+                    <input type="hidden" name="email" value="{{ all_users[i][4] }}">
+                    <input type="hidden" name="admin_level" value="{{ all_users[i][7] }}">
+                    <input type="hidden" name="hourly_rate" value="{{ all_users[i][5] }}">
+                    <input type="hidden" name="workload" value="{{ all_users[i][8] }}">
+                    <td><button type="submit" value="{{ all_users[i][0] }}" class="button button-two">Bearbeiten</button></td>
+                    </form>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

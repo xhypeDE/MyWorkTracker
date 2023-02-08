@@ -1,0 +1,66 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Einladungen - myWorkTracker{% endblock %}
+{% block content %}
+
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Einladung generieren</h5>
+            <p>Hier können Sie Einladungscodes für neue Mitglieder generieren.</p>
+            <form novalidate method="post" action="{{ url_for('create_invite') }}">
+            {% if session['admin_level'] == 3 %}
+                <button type="submit" name="inv_type" value="3" class="button button-checkout">Neue Masteradmin Einladung</button>
+            {% else %}
+                <button type="submit" name="inv_type" value="2" class="button button-checkout">Neue Admin Einladung</button>
+                <button type="submit" name="inv_type" value="1" class="button button-active">Neue Mitarbeiter Einladung</button>
+            {% endif %}
+            </form>
+            {% if message_generate %}
+            <div class="w3-panel w3-blue-gray">
+                <h3>Einladung erstellt! Code: {{ invite_code }}</h3>
+                <p>{{ message_generate }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+        <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Einladungsverwaltung</h5>
+            <p>Hier können Sie aktive Einladungscodes verwalten.</p>
+            {% if message_delete %}
+            <div id="hideMe" class="w3-panel w3-green">
+                <h3>Vorgang erfolgreich!</h3>
+                <p>{{ message_delete }}</p>
+            </div>
+            {% endif %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Einladungscode</th>
+                    <th scope="col">Ersteller</th>
+                    <th scope="col">Access Level</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Löschen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in range(invite_count) %}
+                <tr>
+                    <th scope="row">{{ all_invites[i][1] }}</th>
+                    <td>{{ all_invites[i][2] }}</td>
+                    <td>{% if all_invites[i][4] == 3 %}Masteradmin{% elif all_invites[i][4] == 2 %}Admin{% else %}Mitarbeiter{% endif %}</td>
+                    <td>{% if all_invites[i][3] == 1 %}Aktiv{% else %}Inaktiv{% endif %}</td>
+                    <form novalidate method="post" action="{{ url_for('delete_invite') }}">
+                    <input hidden name="invite_id" value="{{ all_invites[i][0] }}">
+                    <td><button type="submit" value="{{ all_invites[i][0] }}" class="button button-entry-delete">Löschen</button></td>
+                    </form>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

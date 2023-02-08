@@ -1,0 +1,39 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Lohnabrechnungen - myWorkTracker{% endblock %}
+{% block content %}
+
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Lohnabrechnungen</h5>
+            <p>Hier können Sie Ihre Lohnabrechnungen anschauen und herunterladen</p>
+            {% if message %}
+            <div id="hideMe" class="w3-panel w3-red">
+                <h3>Es ist ein Fehler aufgetreten!</h3>
+                <p>{{ message }}</p>
+            </div>
+            {% endif %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Monat</th>
+                    <th scope="col">Anzeigen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in range(12) %}
+                <form novalidate method="post" action="{{ url_for('payroll_generate') }}">
+                    <tr>
+                        <th scope="row">{{ month_option[i][0] }}</th>
+                        <input type="hidden" name="query" value="{{ month_option[i] }}">
+                        <td><button type="submit" name="action" value="show" class="button button-two">Anzeigen</button></td>
+                    </tr>
+                </form>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

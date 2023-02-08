@@ -1,0 +1,94 @@
+{% extends "homepage_layout.html" %}
+{% block title %}Registrieren - myWorkTracker{% endblock %}
+
+{% block header %}
+<li class="navbar-button"><a href="{{ url_for('login') }}" class="button button-two">Login</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="input-content-wrap">
+    <div class="input-box-card">
+            <div class="w3-row">
+                <div class="col">
+                    <a href="{{ url_for('index') }}"><img alt="Logo der Webanwendung" class="sign-in-up-logo" src="{{ url_for('static', filename='myTrack_company_logo.png') }}"></a>
+                </div>
+            </div>
+        <div class="col">
+            {% if error_messages %}
+            <div class="w3-panel w3-red">
+                <h3>Fehler!</h3>
+                {% for error in error_messages %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form novalidate method="post" action="{{ url_for('register') }}">
+                <div class="form-group">
+                    <input type="text" class="form-control {% if 'name' in error_types %}{{ 'error' }}{% endif %}" name="name" placeholder="Vorname" value="{{ name }}">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control {% if 'surname' in error_types %}{{ 'error' }}{% endif %}" name="surname" placeholder="Nachname" value="{{ surname }}">
+                </div>
+                <div class="form-group">
+                    <input type="tel" class="form-control {% if 'phone' in error_types %}{{ 'error' }}{% endif %}" name="phone" placeholder="Telefon" value="{{ phone }}">
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control {% if 'email' in error_types %}{{ 'error' }}{% endif %}" name="email" placeholder="E-Mail" value="{{ email }}">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control {% if 'password' in error_types %}{{ 'error' }}{% endif %}" name="password" placeholder="Passwort">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control {% if 'password' in error_types %}{{ 'error' }}{% endif %}" name="password_verify" placeholder="Passwort wiederholen">
+                </div>
+                <script type="text/javascript">
+                window.onload = function() {
+                var divInvite = document.getElementById("divInvite");
+                var divCompanyName = document.getElementById("divCompanyName");
+                var join = document.getElementById("join");
+                var create = document.getElementById("create")
+                divInvite.style.display = create.checked ? "block" : "none";
+                divCompanyName.style.display = join.checked ? "block" : "none";
+                }
+                function ShowHideDiv() {
+                var divInvite = document.getElementById("divInvite");
+                var divCompanyName = document.getElementById("divCompanyName");
+                var join = document.getElementById("join");
+                var create = document.getElementById("create")
+                divInvite.style.display = create.checked ? "block" : "none";
+                divCompanyName.style.display = join.checked ? "block" : "none";
+                }
+                </script>
+                <div class="form-group" id="divInvite" style="display: none">
+                    <input type="text" class="form-control {% if 'invite' in error_types %}{{ 'error' }}{% endif %}" name="invite_code" placeholder="Einladungs-Code (zum beitreten einer Gruppe.)" value="{{ invite_code }}">
+                </div>
+                <div class="form-group" id="divCompanyName" style="display: block">
+                    <input type="text" class="form-control {% if 'comp_name' in error_types %}{{ 'error' }}{% endif %}" name="company_name" placeholder="Unternehmensname" value="{{ company_name }}">
+                </div>
+                <br>
+                <div class="auth-options">
+                    <div class="custom-control custom-checkbox form-group">
+                        <input type="radio" class="custom-control-input" name="create_group" id="create" onclick="ShowHideDiv()" {% if 'invite' in error_types %}{{ 'checked' }}{% endif %} value="join">
+                        <label class="custom-control-label" for="group-creation-check">Ich möchte einer bestehenden Gruppe beitreten</label>
+                    </div>
+                    <div class="custom-control custom-checkbox form-group">
+                        <input type="radio" class="custom-control-input" name="create_group" id="join" onclick="ShowHideDiv()" {% if 'invite' not in error_types %}{{ 'checked' }}{% endif %} value="create">
+                        <label class="custom-control-label" for="group-creation-check">Ich erstelle eine neue Gruppe für mein Unternehmen</label>
+                    </div>
+                <br>
+                    <div class="custom-control custom-checkbox form-group">
+                        <input type="checkbox" class="custom-control-input" name="tos" value="checked">
+                        <label class="{% if 'tos' in error_types %}{{ 'error-label' }}{% endif %}" for="tos">Ich habe die Datenschutzerklärung und AGB's gelesen und akzeptiert</label>
+                    </div>
+                <br>
+                <div class="submit-area">
+                    <button type="submit" class="button form-button">Registrieren</button>
+                </div>
+                    <br>
+                    <a href="{{ url_for('login') }}">Ich habe schon ein Account!</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Gruppen - myWorkTracker{% endblock %}
+{% block content %}
+
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Gruppenverwaltung</h5>
+            <p>Hier können Sie alle Gruppen der Webanwendung verwalten</p>
+            <div id="hideMe" class="w3-panel w3-red">
+            <h3>Achtung!</h3>
+            <p style="font-style: italic">Beim löschen einer Gruppe werden die Nutzeraccounts aller Mitglieder der Gruppe und die Daten dieser ebenfalls gelöscht!</p>
+            </div>
+            {% if message %}
+            <div class="w3-panel w3-green">
+                <h3>Vorgang erfolgreich!</h3>
+                <p>{{ message }}</p>
+            </div>
+            {% endif %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Unternehmen</th>
+                    <th scope="col">Anzeigen</th>
+                    <th scope="col">Löschen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in range(group_count) %}
+                <tr>
+                    <th scope="row">{{ all_groups[i][0] }}</th>
+                    <td>{{ all_groups[i][1] }}</td>
+                    <form novalidate method="post" action="{{ url_for('users') }}">
+                    <input hidden name="o_id" value="{{ all_groups[i][0] }}">
+                    <input hidden name="unternehmensname" value="{{ all_groups[i][1] }}">
+                    <td><button type="submit" value="{{ all_groups[i][0] }}" class="button button-two">Anzeigen</button></td>
+                    </form>
+                    <form novalidate method="post" action="{{ url_for('delete_group') }}">
+                    <input hidden name="o_id" value="{{ all_groups[i][0] }}">
+                    <td><button type="submit" value="{{ all_groups[i][0] }}" class="button button-entry-delete">Löschen</button></td>
+                    </form>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

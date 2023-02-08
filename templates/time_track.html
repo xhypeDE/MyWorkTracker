@@ -1,0 +1,108 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}Zeit erfassen - myWorkTracker{% endblock %}
+{% block content %}
+
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Echtzeit Zeiterfassung</h5>
+            <p>Hier können Sie Ihre Arbeitszeit sofort erfassen</p>
+            {% if message %}
+            <div id="hideMe" class="w3-panel w3-green">
+                <p>{{ message }}</p>
+            </div>
+            {% endif %}
+            {% if time_entry and not fetched_time['tracking_pause'] %}
+            {% block resume_tracking %}
+            <p>{{ information['time_info'] }}</p>
+            <p>{{ information['time_track_passed'] }}</p>
+            <br>
+            <img src="{{ url_for('static', filename='clock_tracking.png') }}" height="250px" style="display: block;margin: auto;">
+            <br>
+            <p class="tracking-text">Zeit wird erfasst</p>
+            <form novalidate method="post" action="{{ url_for('track_time') }}">
+            <div class="w3-center">
+                <button type="submit" name="action" value="stop" class="button button-checkout">Ausstempeln</button>
+                <input type="hidden" name="t_id" value="{{ fetched_time['t_id'] }}">
+                <button type="submit" name="action" value="pause" class="button button-pause">Pause starten</button>
+            </div>
+            </form>
+            {% endblock resume_tracking %}
+            {% endif %}
+            {% if time_entry and fetched_time['tracking_pause'] %}
+            {% block paused_tracking %}
+            <p>{{ information['time_info'] }}</p>
+            <p>{{ information['time_track_passed'] }}</p>
+            <br>
+            <p>{{ information['time_pause_info'] }}</p>
+            <p>{{ information['time_pause_passed'] }}</p>
+            <br>
+            <img src="{{ url_for('static', filename='clock_paused.png') }}" height="250px" style="display: block;margin: auto;">
+            <br>
+            <p class="paused-text">Zeiterfassung pausiert</p>
+            <form novalidate method="post" action="{{ url_for('track_time') }}">
+            <div class="w3-center">
+                <button type="submit" name="action" value="stop_during_pause" class="button button-checkout">Ausstempeln</button>
+                <input type="hidden" name="t_id" value="{{ fetched_time['t_id'] }}">
+                <button type="submit" name="action" value="resume" class="button button-active">Pause beenden</button>
+            </div>
+            </form>
+            {% endblock paused_tracking %}
+            {% endif %}
+            {% if not time_entry%}
+            {% block start_tracking %}
+            <form novalidate method="post" action="{{ url_for('track_time') }}">
+                <button type="submit" name="action" value="start" class="button button-active {% if admin_level == 3 %}{{ 'admin' }}{% endif %}">Einstempeln</button>
+            </form>
+            {% endblock start_tracking %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Zeiterfassung nachträglich</h5>
+            <p>Hier können Sie Ihre Arbeitszeit nachträglich erfassen</p>
+            {% if message_save %}
+            <div id="hideMe" class="w3-panel w3-green">
+                <p>{{ message_save }}</p>
+            </div>
+            {% endif %}
+                <script>
+                    let dateInputStart = document.getElementById("start_time");
+                    dateInputStart.max = new Date().toISOString().split(".")[0];
+                    function changeStopDateTime(){
+                    let dateInputStartValue = document.getElementById("start_time").value;
+                    let dateInputStop = document.getElementById("stop_time");
+                    if (dateInputStop.value < dateInputStartValue){
+                    dateInputStop.min = new Date(dateInputStartValue).toISOString().split(".")[0];
+                    dateInputStop.value = dateInputStartValue
+                     }
+                    }
+                    function isNumberKey(evt){
+                    let charCode = (evt.which) ? evt.which : evt.keyCode
+                    if (charCode > 31 && (charCode < 48 || charCode > 57))
+                        return false;
+                    return true;
+                    }
+                </script>
+            <form novalidate method="post" action="{{ url_for('track_time') }}">
+            <label for="start_time">Startzeit: </label>
+            <input class="form-control" type="datetime-local" id="start_time" name="start_time" onblur="changeStopDateTime();" min="2005-01-01T20:20">
+            <br>
+            <label for="stop_time">Stopzeit: </label>
+            <input class="form-control" type="datetime-local" id="stop_time" name="stop_time" onblur="changeStopDateTime();">
+            <br>
+            <label for="pause_duration">Dauer Pause (in Minuten): </label>
+            <input onkeypress="return isNumberKey(event)" class="form-control" type="number" id="pause" name="pause" value="{% if pause_raw %}{{ pause_raw }}{% else %}{{ "0" }}{% endif %}">
+            <br><br>
+            <button type="submit" name="action" value="save_input" class="button button-active">Zeiteintrag speichern</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

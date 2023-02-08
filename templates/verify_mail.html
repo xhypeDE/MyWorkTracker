@@ -1,0 +1,38 @@
+{% extends "dashboard_layout.html" %}
+{% block title %}E-Mail bestätigen - myWorkTracker{% endblock %}
+{% block content %}
+<div class="card-column">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">E-Mail verifizieren</h5>
+            <div class="col">
+            {% if error_state %}
+            <div class="w3-panel w3-red">
+                <h3>Fehler! Verifikationscode falsch</h3>
+                <p>Bitte überprüfen Sie Ihren Code!</p>
+            </div>
+            {% endif %}
+            {% if success %}
+            <div class="w3-panel w3-green">
+                <h3>Erfolgreich verschickt!</h3>
+                <p>Bitte überprüfen Sie Ihre E-Mails!</p>
+            </div>
+            {% endif %}
+            <form novalidate method="post" action="{{ url_for('verify_mail_eval') }}">
+                <div class="form-group">
+                    <label class="form-label">Ihr Verifikationscode</label>
+                    <input type="text" class="form-control {% if error %}{{ 'error' }}{% endif %}" name="ver_code" placeholder="Verifikationscode">
+                </div>
+                <input type="hidden" name="u_id" value="{{ u_id }}">
+                <br>
+                <a style="color: #3f51b5;" href="{{ url_for('resend_mail') }}">E-Mail erneut anfordern</a>
+                <div class="submit-area">
+                    <input type="submit" value="E-Mail bestätigen" class="button form-edit {% if admin_level == 3 %}{{ 'admin' }}{% endif %}">
+                    <br>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
