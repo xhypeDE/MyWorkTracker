@@ -1,12 +1,5 @@
 Zugangsdaten Dummy Accounts
 
-Masteradmin myWorkTracker
-E-Mail: masteradmin@myworktracker.de
-Passwort: 1Hb37Bj
-Masteradmin
-
----
-
 Berhard Schmidt
 E-Mail: berhard@schmidt-schmiede.de
 Passwort: i7aNNM7
